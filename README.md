@@ -1,7 +1,7 @@
 # TP_Prog2__Grupo9
-Trabajo practico final para la materia Programación 2 de la Tecnicatura Universitaria en Programación - UTN Sede Rosario. Comisión 2 TT - Entrega limite: 24/10/22  - Alumnos: Luciano Fernandez - Julian Vazquez - Ariel Salinas
+Trabajo practico final para la materia Programación 2 de la Tecnicatura Universitaria en Programación - UTN Sede Rosario. Comisión 2 TT Grupo 9 - Entrega limite: 24/10/22  - Alumnos: Luciano Fernandez - Julian Vazquez - Ariel Salinas
 
-Se utilizan tecnologias: Python y SQL. IDE Utilizado: Visual Studio Code.
+Se utilizan tecnologias: Python 3.10.6 y SQL. IDE Utilizado: Visual Studio Code.
 
 Trabajo realizado en base a la consigna dada por los profesores para el TP Final:
 
