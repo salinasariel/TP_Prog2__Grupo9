@@ -4,7 +4,6 @@ import sqlite3
 class Programa:
     
     def menu(self):
-        elegir : int = 1
         
         print("¿Quiere crear una tabla?")
         print("Atencion, si crea una nueva tabla sobreescribira los datos anteriormente ingresados")
@@ -12,10 +11,10 @@ class Programa:
         if opciontabla == 1:
             borrarSql = "DROP TABLE IF EXISTS Monopatin"
             sql = "CREATE TABLE Monopatin (_id INTEGER PRIMARY KEY , modelo VARCHAR(30), marca  VARCHAR(30), potencia VARCHAR(30), color VARCHAR(30), cantidadDisponible INTEGER, precio REAL, fechaUltimoPrecio DATETIME)"
-            borrarSql2 = "DROP TABLE IF EXISTS HistoricoMono"
+            borrarsql2 = "DROP TABLE IF EXISTS HistoricoMono"
             sql2 = "CREATE TABLE HistoricoMono (_id INTEGER PRIMARY KEY , modelo VARCHAR(30), marca  VARCHAR(30), potencia VARCHAR(30), color VARCHAR(30), cantidadDisponible INTEGER, precio REAL, fechaUltimoPrecio DATETIME)"
             self.nuevaTabla(borrarSql, sql)
-            self.nuevaTabla(borrarSql2, sql2)
+            self.nuevaTabla(borrarsql2, sql2)
         
         while True:
             print("------------------------------")
@@ -30,12 +29,13 @@ class Programa:
             print("0- Salir del menu: ")
             nro = int(input("Por favor ingrese un numero: "))
             if nro == 1:
+                elegir : int = 1
                 print("\n\tCARGA DE DATOS")
                 while elegir == 1:
-                    marca = str("Marca: " + input("Ingrese el marca del monopatin: "))
-                    modelo = str("Modelo: " + input("Ingrese el modelo del monopatin: "))
-                    potencia = str("Potencia: " + input("Ingrese la potencia del monopatin: "))
-                    color = str("Color: " + input("Ingrese el color del monopatin: "))
+                    marca = str(input("Ingrese el marca del monopatin: "))
+                    modelo = str(input("Ingrese el modelo del monopatin: "))
+                    potencia = str(input("Ingrese la potencia del monopatin: "))
+                    color = str(input("Ingrese el color del monopatin: "))
                     cantidadDisponible = int(input("Ingrese la cantidad disponible: "))
                     precio = float(input("Ingrese el precio del monopatin: "))
                     fechaUltimoPrecio = date.today()
@@ -68,14 +68,13 @@ class Programa:
                 Monopatin.mostrarDatos(self, sql)
 
             elif nro == 6:
-                print("\nLISTADO DE MONOPATINES")
+                aumentoDolar: float = 0.23
+                sql = "UPDATE Monopatin SET precio=precio+(precio*'{}') ".format(aumentoDolar)
+                sql3 = "UPDATE Monopatin SET fechaUltimoPrecio='{}' ".format(date.today())
+                Monopatin.precioDolar(self, sql, sql3)
+                print("\nLISTADO DE MONOPATINES HISTORICO")
                 sql2 = "SELECT * FROM HistoricoMono"
                 Monopatin.mostrarDatos(self, sql2)
-                #aumentoDolar: float = 0.23
-                #sql = "UPDATE Monopatin SET precio=precio+(precio*'{}') ".format(aumentoDolar)
-                #sql2 = "UPDATE Monopatin SET fechaUltimoPrecio='{}' ".format(date.today())
-                #Monopatin.precioDolar(self, sql, sql2)
-                #sql3 = "SELECT * FROM HistoricoMono"            
 
             elif nro == 7:
                 print("\n\tTABLA DE REGISTROS ANTERIORES")
@@ -84,7 +83,7 @@ class Programa:
                 dia = str(input("Ingrese el dia: "))
                 fechaIngresada = date(int(anio), int(mes), int(dia))
                 fechaInicio = date(1000,1,1)
-                Monopatin.mostrarDatos(self, "SELECT * FROM Monopatin where fechaUltimoPrecio BETWEEN '{}' AND '{}' ".format(fechaInicio, fechaIngresada))
+                Monopatin.mostrarDatos(self, "SELECT * FROM HistoricoMono where fechaUltimoPrecio BETWEEN '{}' AND '{}' ".format(fechaInicio, fechaIngresada))
             
             elif nro == 0:
                 print("\n\t*RECUERDE QUE LOS DATOS CONTINUAN GUARDADOS PARA UN PROXIMO USO*")
@@ -200,12 +199,12 @@ class Monopatin:
             conexion.cerrarConec()
 
     # Numero 6        
-    def precioDolar(self, sql, sql2) -> None:
+    def precioDolar(self, sql, sql3) -> None:
         conexion = Conexiones()
         conexion.abrirConexion()
         try:
             conexion.miCursor.execute(sql)
-            conexion.miCursor.execute(sql2)
+            conexion.miCursor.execute(sql3)
             conexion.miConexion.commit()
         except:
             print("\tERROR AL ACTUALIZAR EL PRECIO")
