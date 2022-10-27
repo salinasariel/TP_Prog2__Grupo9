@@ -15,6 +15,7 @@ class Programa:
             borrarSql2 = "DROP TABLE IF EXISTS HistoricoMono"
             sql2 = "CREATE TABLE HistoricoMono (_id INTEGER PRIMARY KEY , modelo VARCHAR(30), marca  VARCHAR(30), potencia VARCHAR(30), color VARCHAR(30), cantidadDisponible INTEGER, precio REAL, fechaUltimoPrecio DATETIME)"
             self.nuevaTabla(borrarSql, sql)
+            self.nuevaTabla(borrarSql2, sql2)
         
         while True:
             print("------------------------------")
@@ -40,6 +41,8 @@ class Programa:
                     fechaUltimoPrecio = date.today()
                     nuevo_monopatin = Monopatin(marca, modelo, potencia, color, cantidadDisponible, precio, fechaUltimoPrecio)
                     nuevo_monopatin.cargarMonopatin()
+                    nuevo_monopatinhistorico = Monopatin(marca, modelo, potencia, color, cantidadDisponible, precio, fechaUltimoPrecio)
+                    nuevo_monopatinhistorico.cargarMonopatinHistorico()
                     elegir = int(input("Desea ingresa otro monopatin? 1-SI 0-NO "))
 
             elif nro == 2:
@@ -65,11 +68,14 @@ class Programa:
                 Monopatin.mostrarDatos(self, sql)
 
             elif nro == 6:
-                aumentoDolar: float = 0.23
-                sql = "UPDATE Monopatin SET precio=precio+(precio*'{}') ".format(aumentoDolar)
-                sql2 = "UPDATE Monopatin SET fechaUltimoPrecio='{}' ".format(date.today())
-                Monopatin.precioDolar(self, sql, sql2)
-                sql3 = "SELECT * FROM HistoricoMono"                
+                print("\nLISTADO DE MONOPATINES")
+                sql2 = "SELECT * FROM HistoricoMono"
+                Monopatin.mostrarDatos(self, sql2)
+                #aumentoDolar: float = 0.23
+                #sql = "UPDATE Monopatin SET precio=precio+(precio*'{}') ".format(aumentoDolar)
+                #sql2 = "UPDATE Monopatin SET fechaUltimoPrecio='{}' ".format(date.today())
+                #Monopatin.precioDolar(self, sql, sql2)
+                #sql3 = "SELECT * FROM HistoricoMono"            
 
             elif nro == 7:
                 print("\n\tTABLA DE REGISTROS ANTERIORES")
@@ -205,6 +211,18 @@ class Monopatin:
             print("\tERROR AL ACTUALIZAR EL PRECIO")
         finally:
             print("\tPRECIO ACTUALIZADO EXITOSAMENTE")
+            conexion.cerrarConec()
+            
+    # Numero 7
+    def cargarMonopatinHistorico(self):
+        conexion = Conexiones()
+        conexion.abrirConexion()
+        try:
+            conexion.miCursor.execute("INSERT INTO HistoricoMono(marca,modelo,potencia,color,cantidadDisponible,precio,fechaUltimoPrecio) VALUES('{}','{}','{}','{}','{}','{}','{}')".format(self.marca, self.modelo, self.potencia, self.precio, self.color, self.cantidadDisponible, self.fechaUltimoPrecio))
+            conexion.miConexion.commit()#para decir que confirmamos los cambios # execute para consultar
+        except:
+            print("\tERROR AL CARGAR UN MONOPATIN")
+        finally:
             conexion.cerrarConec()
 
 try:
