@@ -4,7 +4,7 @@ import sqlite3
 class Programa:
     
     def menu(self):
-        
+        ingreso = 0
         print("¿Quiere crear una tabla?")
         print("Atencion, si crea una nueva tabla sobreescribira los datos anteriormente ingresados")
         opciontabla = int(input("1-SI 0-NO "))
@@ -68,13 +68,30 @@ class Programa:
                 Monopatin.mostrarDatos(self, sql)
 
             elif nro == 6:
+                
+                
+                
+                ingreso = ingreso + 1
+                
                 aumentoDolar: float = 0.23
                 sql = "UPDATE Monopatin SET precio=precio+(precio*'{}') ".format(aumentoDolar)
                 sql3 = "UPDATE Monopatin SET fechaUltimoPrecio='{}' ".format(date.today())
                 Monopatin.precioDolar(self, sql, sql3)
-                print("\nLISTADO DE MONOPATINES HISTORICO")
-                sql2 = "SELECT * FROM HistoricoMono"
-                Monopatin.mostrarDatos(self, sql2)
+
+                if ingreso > 1:
+
+                    #sql2 = "UPDATE HistoricoMono SET precio=precio+(precio*'{}') ".format(aumentoDolar)
+                    #sql4 = "UPDATE HistoricoMono SET fechaUltimoPrecio='{}' ".format(date.today())
+                    #precioDolarHistorico(self, sql2, sql4)
+                    
+                    precio = precio+(precio*aumentoDolar)
+                    nuevo_monopatinhistorico = Monopatin(marca, modelo, potencia, color, cantidadDisponible, precio, fechaUltimoPrecio)
+                    nuevo_monopatinhistorico.cargarMonopatinHistorico()
+                    #sql2 = "UPDATE HistoricoMono SET fechaUltimoPrecio='{}' ".format(date.today())
+                    #precioDolarHistoricoTiempo(self, sql2)
+                
+                
+                
 
             elif nro == 7:
                 print("\n\tTABLA DE REGISTROS ANTERIORES")
@@ -106,8 +123,8 @@ class Programa:
 class Conexiones:
     
     def abrirConexion(self):
-        self.miConexion = sqlite3.connect("EmpresaDeMonopatines")
-        self.miCursor = self.miConexion.cursor()
+        self.miConexion = sqlite3.connect("EmpresaDeMonopatines")#crea la base de datos
+        self.miCursor = self.miConexion.cursor()#creamos un cursor
         
     def cerrarConec(self):
         self.miConexion.close()    
@@ -189,7 +206,7 @@ class Monopatin:
         conexion.abrirConexion()
         try:
             conexion.miCursor.execute(sql)
-            monopatines = conexion.miCursor.fetchall()
+            monopatines = conexion.miCursor.fetchall()#es un método que obtiene todas las tuplas restantes de la última declaración ejecutada de una tabla
             for mono in monopatines:
                 print(mono)
         except:
@@ -212,6 +229,19 @@ class Monopatin:
             print("\tPRECIO ACTUALIZADO EXITOSAMENTE")
             conexion.cerrarConec()
             
+    def precioDolarHistoricoTiempo(self, sql2) -> None:
+        conexion = Conexiones()
+        conexion.abrirConexion()
+        try:
+            conexion.miCursor.execute(sql2)
+            
+            conexion.miConexion.commit()
+        except:
+            print("\tERROR AL ACTUALIZAR EL PRECIO HISTORICO")
+        finally:
+            print("\tPRECIO HISTORICO ACTUALIZADO EXITOSAMENTE")
+            conexion.cerrarConec()
+    
     # Numero 7
     def cargarMonopatinHistorico(self):
         conexion = Conexiones()
@@ -223,6 +253,17 @@ class Monopatin:
             print("\tERROR AL CARGAR UN MONOPATIN")
         finally:
             conexion.cerrarConec()
+
+    """def cargarMonopatinHistorico(self):
+        conexion = Conexiones()
+        conexion.abrirConexion()
+        try:
+            conexion.miCursor.execute("INSERT INTO HistoricoMono(marca,modelo,potencia,color,cantidadDisponible,precio,fechaUltimoPrecio) VALUES('{}','{}','{}','{}','{}','{}','{}')".format(self.marca, self.modelo, self.potencia, self.precio, self.color, self.cantidadDisponible, self.fechaUltimoPrecio))
+            conexion.miConexion.commit()#para decir que confirmamos los cambios # execute para consultar
+        except:
+            print("\tERROR AL CARGAR UN MONOPATIN")
+        finally:
+            conexion.cerrarConec()"""
 
 try:
     programa = Programa()
