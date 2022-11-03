@@ -41,8 +41,8 @@ class Programa:
                     fechaUltimoPrecio = date.today()
                     nuevo_monopatin = Monopatin(marca, modelo, potencia, color, cantidadDisponible, precio, fechaUltimoPrecio)
                     nuevo_monopatin.cargarMonopatin()
-                    nuevo_monopatinhistorico = Monopatin(marca, modelo, potencia, color, cantidadDisponible, precio, fechaUltimoPrecio)
-                    nuevo_monopatinhistorico.cargarMonopatinHistorico()
+                    #nuevo_monopatinhistorico = Monopatin(marca, modelo, potencia, color, cantidadDisponible, precio, fechaUltimoPrecio)
+                    #nuevo_monopatinhistorico.cargarMonopatinHistorico()
                     elegir = int(input("Desea ingresa otro monopatin? 1-SI 0-NO "))
 
             elif nro == 2:
