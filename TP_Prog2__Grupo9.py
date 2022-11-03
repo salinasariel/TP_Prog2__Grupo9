@@ -237,15 +237,17 @@ class Monopatin:
     def cargarMonopatinHistorico(self):
         conexion = Conexiones()
         conexion.abrirConexion()
-        conexion.miCursor.execute("SELECT * FROM Monopatin")
-        monopatines = conexion.miCursor.fetchall()
-        for mono in monopatines:
-            conexion.miCursor.execute("INSERT INTO HistoricoMono(marca,modelo,potencia,color,cantidadDisponible,precio,fechaUltimoPrecio) VALUES('{}','{}','{}','{}','{}','{}','{}')".format(mono[1],mono[2],mono[3],mono[4],mono[5], mono[6], mono[7]))
-        conexion.miConexion.commit()
-        conexion.cerrarConec()
+        try:
+            conexion.miCursor.execute("SELECT * FROM Monopatin")
+            monopatines = conexion.miCursor.fetchall()
+            for mono in monopatines:
+                conexion.miCursor.execute("INSERT INTO HistoricoMono(marca,modelo,potencia,color,cantidadDisponible,precio,fechaUltimoPrecio) VALUES('{}','{}','{}','{}','{}','{}','{}')".format(mono[1],mono[2],mono[3],mono[4],mono[5], mono[6], mono[7]))
+            conexion.miConexion.commit()
+        except:
+            print("\tERROR AL MOSTRAR LA TABLA HISTORICA")
+        finally:
+            conexion.cerrarConec()
 
-programa = Programa()
-programa.menu()
 
 try:
     programa = Programa()
