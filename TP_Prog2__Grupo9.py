@@ -12,7 +12,7 @@ class Programa:
             borrarSql = "DROP TABLE IF EXISTS Monopatin"
             sql = "CREATE TABLE Monopatin (_id INTEGER PRIMARY KEY , modelo VARCHAR(30), marca  VARCHAR(30), potencia VARCHAR(30), color VARCHAR(30), cantidadDisponible INTEGER, precio REAL, fechaUltimoPrecio DATETIME)"
             borrarsql2 = "DROP TABLE IF EXISTS HistoricoMono"
-            sql2 = "CREATE TABLE HistoricoMono (_id INTEGER PRIMARY KEY , modelo VARCHAR(30), marca  VARCHAR(30), potencia VARCHAR(30), color VARCHAR(30), cantidadDisponible INTEGER, precio REAL, fechaUltimoPrecio DATETIME)"
+            sql2 = "CREATE TABLE HistoricoMono (modelo VARCHAR(30), marca  VARCHAR(30), potencia VARCHAR(30), color VARCHAR(30), cantidadDisponible INTEGER, precio REAL, fechaUltimoPrecio DATETIME)"
             self.nuevaTabla(borrarSql, sql)
             self.nuevaTabla2(borrarsql2, sql2)
         
@@ -47,9 +47,10 @@ class Programa:
 
             elif nro == 2:
                 print("\n\tMODIFICAR PRECIO DE UN MONOPATIN")
-                nuevoId = int(input("Ingrese el ID del monopatin: "))
-                nuevoPrecio = float(input("Ingrese el nuevo precio del monopatin: "))
-                Monopatin.modificarPrecio(self, nuevoId, nuevoPrecio)
+                nuevoId=int(input("Ingrese el ID del monopatin: "))
+                nuevoPrecio=float(input("Ingrese el nuevo precio del monopatin: "))
+                sql = "UPDATE Monopatin SET precio='{}' where _id='{}' ".format(nuevoPrecio, nuevoId)
+                Monopatin.modificarPrecio(self, sql)
 
             elif nro == 3: 
                 print("\n\tELIMINAR MONOPATIN")
@@ -159,12 +160,14 @@ class Monopatin:
             conexion.cerrarConec()
     
     # Numero 2
-    def modificarPrecio(self, nuevoId: int, nuevoPrecio: float) -> None:
+    def modificarPrecio(self, sql) -> None:
+        Monopatin.cargarMonopatinHistorico(self)
         conexion = Conexiones()
         conexion.abrirConexion()
         try:
-            conexion.miCursor.execute("UPDATE Monopatin SET precio='{}' where _id='{}' ".format(nuevoPrecio, nuevoId))
+            conexion.miCursor.execute(sql)
             conexion.miConexion.commit()
+            #conexion.miCursor.execute("UPDATE Monopatin SET precio='{}' where _id='{}' ".format(nuevoPrecio, nuevoId))
             print("\tPRECIO ACTUALIZADO EXITOSAMENTE")
         except:
             print("\tERROR AL ACTUALIZAR EL PRECIO")
